@@ -1,5 +1,5 @@
 config:
-  target: 'http://0.0.0.0:3000'
+  target: 'http://34.68.90.97:3002'
   payload:
     # path is relative to the location of the test script
     path: '../../dbSample.csv'
@@ -10,12 +10,11 @@ config:
     pool: 10
   phases:
     - duration: 60
-      arrivalRate: 20
-      rampTo: 100
+      arrivalRate: 50
   defaults:
     headers:
       x-my-service-auth: '987401838271002188298567'
 scenarios:
   - flow:
       - get:
-          url: '/items/?search={{itemName}}'
+          url: '/items/?id={{itemId}}'

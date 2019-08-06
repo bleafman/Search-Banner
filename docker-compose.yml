@@ -4,20 +4,67 @@ version: '3.1'
 services:
   search-server:
     image: bleafman/searchbar
-    command: npm run start
+    container_name: search-server
+    command: [
+        # './wait-for-it.sh',
+        # 'mongo:27017',
+        # '--timeout=120',
+        # '--',
+        'npm',
+        'run',
+        'start',
+      ]
     depends_on:
-      - mongo
+      - es
     ports:
       - 3002:3002
+    env_file:
+      - .env
+    deploy:
+      placement:
+        constraints: [node.role!=manager]
+      replicas: 6
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 250M
+      restart_policy:
+        condition: on-failure
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.0
+    container_name: es
     environment:
-      MONGO_USER: root
-      MONGO_PASS: example
-    volumes:
-      - ./search-banner:/opt/search-banner
-  mongo:
-    image: mongo
-    container_name: mongo-docker
+      - discovery.type=single-node
     ports:
-      - 27017:27017
+      - 9200:9200
     volumes:
-      - $HOME/docker/volumes/mongodb:/data/db
+      - esdata:/usr/share/elasticsearch/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.7'
+      placement:
+        constraints: [node.role == manager]
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:7.3.0
+  #   container_name: kibana
+  #   environment:
+  #     ELASTICSEARCH_HOSTS: 'http://34.68.90.97:9200'
+  #   depends_on:
+  #     - es
+  #   ports:
+  #     - 5601:5601
+  #   volumes:
+  #     - kibana_data:/usr/share/kibana/config/kibana.yml
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.3'
+  #         memory: 250M
+  #     placement:
+  #       constraints: [node.role == manager]
+networks:
+  search:
+volumes:
+  esdata:
+  # kibana_data:
