@@ -14,6 +14,7 @@ You can find a full day-by-day breakdown of challenges and triumphs in the [DevJ
 
 ### Contributors
 
+- [Brandon Leafman](https://github.com/bleafman)
 - [Brian Embry](https://github.com/baembry)
 - [Charles Neblett](https://github.com/cnebs)
 - [Chris Fauries](https://github.com/chrisfauries)
